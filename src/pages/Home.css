@@ -1,0 +1,28 @@
+header{
+  width: 100%;
+  background-color: var(--Secondary-color);
+  text-align: center;
+  display: flex;
+
+  & .logo {
+    display: flex;
+    width: 100px;
+    height: 100px;
+    justify-content: center;
+    background-color: var(--Primary-color);
+    margin-left: 2rem;
+    padding: 8px 0 10px;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: -3px 3px 5px #00000054;
+  }
+
+  & .mascot{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 200px;
+    padding: 10px 0 10px;
+  }
+}
+
+

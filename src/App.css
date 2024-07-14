@@ -4,8 +4,8 @@
   margin: 0 auto;
   /* padding: 2rem; */
   /* text-align: center; */
-  display: grid;
-  grid-template-columns: 100px auto;
+  /* display: grid;
+  grid-template-columns: 100px auto; */
 }
 #content{
   /* width: 100%;
