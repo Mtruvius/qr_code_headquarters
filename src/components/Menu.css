@@ -1,0 +1,22 @@
+.menu{  
+  width: 100px;
+  background-color: var(--Primary-color);
+  height: 100vh;
+  position: relative;
+
+  & .logo {
+    width: 90px;
+    padding: 5px;
+  }
+
+  & .menu_links{
+    position: relative;
+    left: 10px;
+
+    & a{
+      color: black;
+    }
+
+  }
+}
+

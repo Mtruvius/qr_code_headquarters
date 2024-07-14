@@ -1,36 +1,22 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-// eslint-disable-next-line import/no-absolute-path
-import viteLogo from '/vite.svg';
 import './App.css';
+import Header from './components/Header';
+import Menu from './components/Menu';
+import logo from './assets/logo.png';
 
-function App() {
-  const [count, setCount] = useState(0);
-
+export default function App() {
+  const menuObj = { menu1: '#', menu2: '#', menu3: '#', menu4: '#' };
   return (
     <>
+      <Menu
+        direction="vert"
+        labels_N_links={menuObj}
+        logo={logo}
+        icons={['qr_code_2']}
+        iconStyle="left"
+      />
       <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Header />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((c) => c + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 }
-
-export default App;
