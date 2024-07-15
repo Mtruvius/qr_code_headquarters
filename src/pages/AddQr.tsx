@@ -7,7 +7,11 @@ export default function AddQr({
 }) {
   return (
     <>
-      <BackBtn onBackClicked={(e) => onBackClicked(e)} />
+      <header>
+        <div className="menu_btns">
+          <BackBtn onBackClicked={(e) => onBackClicked(e)} />
+        </div>
+      </header>
       <div>Hello AddQr</div>
       <div>Hello AddQr</div>
     </>

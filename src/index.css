@@ -5,8 +5,9 @@
 :root {
   --Primary-color: #9e9b9b;
   --Secondary-color: #312f3a;
+  --MainFont: "Agdasima", sans-serif;
   
-  font-family: "Agdasima", sans-serif;
+  font-family: var(--MainFont);
   font-weight: 400;
   font-style: normal;
 

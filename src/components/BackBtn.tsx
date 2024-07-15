@@ -7,8 +7,9 @@ export default function BackBtn({
     <button
       type="button"
       onClick={(e) => onBackClicked(e.target as HTMLButtonElement)}
+      className="home material-symbols-outlined"
     >
-      Back
+      arrow_back
     </button>
   );
 }

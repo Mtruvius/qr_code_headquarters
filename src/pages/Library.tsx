@@ -7,7 +7,12 @@ export default function Library({
 }) {
   return (
     <>
-      <BackBtn onBackClicked={(e) => onBackClicked(e)} />
+      <header>
+        <div className="menu_btns">
+          <BackBtn onBackClicked={(e) => onBackClicked(e)} />
+        </div>
+      </header>
+
       <div>Hello Library</div>
       <div>Hello Library</div>
     </>
