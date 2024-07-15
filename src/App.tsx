@@ -14,19 +14,19 @@ export default function App() {
     const title = selection.firstChild?.textContent?.toLowerCase();
     switch (title) {
       case 'arrow_back':
-        setHome('110vh');
+        setHome('100vh');
         setLib('0vh');
         setaddQr('0vh');
         break;
       case 'library_books':
         setHome('0vh');
-        setLib('110vh');
+        setLib('100vh');
         setaddQr('0vh');
         break;
       case 'qr_code_2_add':
         setHome('0vh');
         setLib('0vh');
-        setaddQr('110vh');
+        setaddQr('100vh');
         break;
       default:
         break;
@@ -39,12 +39,9 @@ export default function App() {
       </div>
       <div
         style={{
-          position: 'relative',
-          top: '-5px',
           overflow: 'hidden',
           height: lib,
           transition: 'height ease-in 0.3s',
-          borderBottom: '5px solid var(--Primary-color)',
           backgroundColor: 'var(--Primary-color)',
         }}
       >
@@ -69,12 +66,9 @@ export default function App() {
       </div>
       <div
         style={{
-          position: 'relative',
-          top: '-10px',
           overflow: 'hidden',
           height: addQr,
           transition: 'height ease-in 0.3s',
-          borderTop: '5px solid var(--Primary-color)',
           backgroundColor: 'red',
         }}
       >
