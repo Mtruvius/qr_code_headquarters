@@ -1,15 +1,5 @@
 import './MenuBtns.css';
-
-function tooltip(btn: HTMLButtonElement) {
-  const newText = btn.textContent?.includes('qr_code')
-    ? 'QR Code'
-    : 'View My Library';
-  if (document.querySelector('.tooltip') !== null) return null;
-  return btn.insertAdjacentHTML(
-    'beforeend',
-    `<div class="tooltip">${newText}</div>`
-  );
-}
+import Tooltip from './Tooltip';
 
 export default function MenuBtns({
   onClicked,
@@ -24,7 +14,7 @@ export default function MenuBtns({
           onClicked(e.target as HTMLButtonElement);
         }}
         onMouseOver={(e) => {
-          tooltip(e.target as HTMLButtonElement);
+          Tooltip(e.target as HTMLButtonElement, 'Create New QrCode');
         }}
         onMouseLeave={(e) => {
           (e.target as HTMLButtonElement).children[0].remove();
@@ -39,7 +29,7 @@ export default function MenuBtns({
           onClicked(e.target as HTMLButtonElement);
         }}
         onMouseOver={(e) => {
-          tooltip(e.target as HTMLButtonElement);
+          Tooltip(e.target as HTMLButtonElement, 'My Library');
         }}
         onMouseLeave={(e) => {
           (e.target as HTMLButtonElement).children[0].remove();

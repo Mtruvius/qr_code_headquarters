@@ -37,3 +37,13 @@ header{
     align-items: baseline;
   }  
 }
+
+.tooltip{
+  position:absolute;
+  z-index: 9;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: var(--MainFont);
+  font-size:small;
+  background-color: var(--Primary-color);  
+}

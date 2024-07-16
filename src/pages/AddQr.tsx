@@ -3,12 +3,13 @@ import { IProps, QRCode } from 'react-qrcode-logo';
 import { ColorPicker, IColor, useColor } from 'react-color-palette';
 import 'react-color-palette/css';
 import BackBtn from '../components/BackBtn';
+import Tooltip from '../components/Tooltip';
 import './AddQr.css';
 
 function URLInput({ onURLSubmit }: { onURLSubmit: (url: string) => void }) {
   const [url, setURL] = useState('');
   return (
-    <div>
+    <div className="dataField">
       <form onSubmit={(e) => e.preventDefault()}>
         <span>URL:</span>
         <input type="text" onChange={(e) => setURL(e.target.value)} />
@@ -21,6 +22,7 @@ function URLInput({ onURLSubmit }: { onURLSubmit: (url: string) => void }) {
     </div>
   );
 }
+
 function QrDotsStyle({
   onStyleSelect,
 }: {
@@ -32,7 +34,8 @@ function QrDotsStyle({
   }
 
   return (
-    <div>
+    <div className="selectStyleField">
+      <span>Style:</span>
       <button
         type="button"
         data-style="squares"
@@ -63,7 +66,7 @@ function QrSizeSlider({
   }
 
   return (
-    <div>
+    <div className="qrCode_size">
       <span>Size: </span>
       <input
         type="range"
@@ -179,6 +182,7 @@ export default function AddQr({
       </header>
       <div id="addQr">
         <div className="qrPreview" style={{ width: `${size}px` }}>
+          <span>Preview: </span>
           <QrPreview
             value={qrValue}
             qrStyle={qrStyle}
@@ -202,7 +206,8 @@ export default function AddQr({
         <br />
         <QrSizeSlider onSliderChange={(s: number) => setSize(s)} />
         <br />
-        <div style={{ display: 'flex' }}>
+        <div className="qrCode_color">
+          <span>Color:</span>
           <QrColorPicker
             startColor="#fff"
             label="Back"
@@ -217,9 +222,37 @@ export default function AddQr({
           <br />
         </div>
         <br />
-        <div>
-          <button type="button">Add to Library</button>
-          <button type="button">Download</button>
+        <div className="footBtns">
+          <button
+            type="button"
+            className="material-symbols-outlined"
+            onFocus={() => {
+              // onClicked(e.target as HTMLButtonElement);
+            }}
+            onMouseOver={(e) => {
+              Tooltip(e.target as HTMLButtonElement, 'Add to Library');
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLButtonElement).children[0].remove();
+            }}
+          >
+            library_add
+          </button>
+          <button
+            type="button"
+            className="material-symbols-outlined"
+            onFocus={() => {
+              // onClicked(e.target as HTMLButtonElement);
+            }}
+            onMouseOver={(e) => {
+              Tooltip(e.target as HTMLButtonElement, 'Download');
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLButtonElement).children[0].remove();
+            }}
+          >
+            download
+          </button>
         </div>
         <br />
         <br />
