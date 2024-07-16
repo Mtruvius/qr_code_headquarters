@@ -1,0 +1,35 @@
+#addQr {
+  position: relative;
+  padding: 20px;
+  overflow: auto;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & form{
+    display: flex;
+    align-items: center;
+    & input{
+      height: auto;
+    }
+  }
+
+  & .qrPreview{
+    /* float: right; */
+  }
+
+  & .backColorOption{
+    position: relative;
+
+    & .colorPicker{
+      position: absolute;
+      bottom: 0;
+      height: 266px;
+      width: 200px;      
+      & .rcp-root{
+        box-shadow: 2px 3px 5px #0009;
+      }
+    }
+  }
+}
