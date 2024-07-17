@@ -1,6 +1,6 @@
 import './Home.css';
 import Mascot from '../assets/mascot.png';
-import MenuBtns from '../components/MenuBtns';
+import Header from '../components/Header';
 
 function Body() {
   return (
@@ -17,15 +17,7 @@ export default function Home({
 }) {
   return (
     <>
-      <header>
-        <div className="menu_btns">
-          <MenuBtns
-            onClicked={(e) => {
-              onBtnClicked(e);
-            }}
-          />
-        </div>
-      </header>
+      <Header onBtnClicked={onBtnClicked} />
       <Body />
     </>
   );

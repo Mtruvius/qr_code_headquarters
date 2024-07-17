@@ -1,0 +1,14 @@
+.library{
+  padding: 20px;
+
+  & div{
+    max-width: 150px;
+    max-height: 150px;
+    margin: 5px;
+    float: left;
+  }
+  & canvas{
+    max-width: 150px;
+    max-height: 150px;
+  }
+}

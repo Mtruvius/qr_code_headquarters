@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { IProps, QRCode } from 'react-qrcode-logo';
 import { ColorPicker, IColor, useColor } from 'react-color-palette';
 import 'react-color-palette/css';
-import BackBtn from '../components/BackBtn';
 import Tooltip from '../components/Tooltip';
+import { SaveProps } from '../assets/helper';
 import './AddQr.css';
+import Header from '../components/Header';
 
 function URLInput({ onURLSubmit }: { onURLSubmit: (url: string) => void }) {
   const [url, setURL] = useState('');
@@ -163,23 +164,58 @@ function QrPreview({
   }
 }
 
+function SaveQr(props: SaveProps) {
+  if (props.qrValue === '') return;
+  const name = 'qr_library';
+  const data: SaveProps[] = [];
+  if (localStorage.getItem(name)) {
+    JSON.parse(localStorage.getItem(name)!).forEach((qrCode: SaveProps) => {
+      data.push(qrCode);
+    });
+  }
+  const conatinsData = data.some((v) => v.qrValue === props.qrValue);
+  if (conatinsData === false) {
+    data.push({ ...props });
+  } else {
+    data.filter((d) => {
+      if (d.qrValue !== props.qrValue) return d;
+      return Object.assign(d, props);
+    });
+  }
+  localStorage.setItem(name, JSON.stringify(data));
+}
+
 export default function AddQr({
   onBackClicked,
 }: {
   onBackClicked: (target: HTMLButtonElement) => void;
 }) {
-  const [qrValue, setQrValue] = useState('HEllo');
-  const [bgColor, setBgColor] = useState('#fff');
-  const [fgColor, setFgColor] = useState('#000');
-  const [size, setSize] = useState(150);
-  const [qrStyle, setqrStyle] = useState('squares' as IProps['qrStyle']);
+  // localStorage.clear();
+  const defaultQrValue = '';
+  const defaultBgColor = '#fff';
+  const defaultFgColor = '#000';
+  const defaultSize = 150;
+  const defaultQrStyle = 'squares' as IProps['qrStyle'];
+
+  const [qrValue, setQrValue] = useState(defaultQrValue);
+  const [bgColor, setBgColor] = useState(defaultBgColor);
+  const [fgColor, setFgColor] = useState(defaultFgColor);
+  const [size, setSize] = useState(defaultSize);
+  const [qrStyle, setqrStyle] = useState(defaultQrStyle);
   return (
     <>
-      <header>
-        <div className="menu_btns">
-          <BackBtn onBackClicked={(e) => onBackClicked(e)} />
-        </div>
-      </header>
+      <Header
+        isBackBtn
+        onBtnClicked={(e) => {
+          onBackClicked(e);
+          setQrValue(defaultQrValue);
+          setBgColor(defaultBgColor);
+          setFgColor(defaultFgColor);
+          setSize(defaultSize);
+          setqrStyle(defaultQrStyle);
+        }}
+      />
+
       <div id="addQr">
         <div className="qrPreview" style={{ width: `${size}px` }}>
           <span>Preview: </span>
@@ -226,10 +262,17 @@ export default function AddQr({
           <button
             type="button"
             className="material-symbols-outlined"
-            onFocus={() => {
-              // onClicked(e.target as HTMLButtonElement);
+            onClick={() => {
+              const saveData: SaveProps = {
+                qrValue,
+                qrStyle,
+                size,
+                bgColor,
+                fgColor,
+              };
+              SaveQr(saveData);
             }}
-            onMouseOver={(e) => {
+            onMouseEnter={(e) => {
               Tooltip(e.target as HTMLButtonElement, 'Add to Library');
             }}
             onMouseLeave={(e) => {
@@ -241,10 +284,10 @@ export default function AddQr({
           <button
             type="button"
             className="material-symbols-outlined"
-            onFocus={() => {
+            onClick={() => {
               // onClicked(e.target as HTMLButtonElement);
             }}
-            onMouseOver={(e) => {
+            onMouseEnter={(e) => {
               Tooltip(e.target as HTMLButtonElement, 'Download');
             }}
             onMouseLeave={(e) => {

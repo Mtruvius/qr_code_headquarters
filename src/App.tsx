@@ -37,11 +37,9 @@ export default function App() {
       <div className="logo">
         <img src={Logo} alt="Qr Code Headquarters logo" />
       </div>
-      <div
+      <section
         style={{
-          overflow: 'hidden',
           height: lib,
-          transition: 'height ease-in 0.3s',
           backgroundColor: 'var(--Primary-color)',
         }}
       >
@@ -50,12 +48,10 @@ export default function App() {
             selectComponent(e);
           }}
         />
-      </div>
-      <div
+      </section>
+      <section
         style={{
-          overflow: 'hidden',
           height: home,
-          transition: 'height ease-in 0.3s',
         }}
       >
         <Home
@@ -63,12 +59,10 @@ export default function App() {
             selectComponent(e);
           }}
         />
-      </div>
-      <div
+      </section>
+      <section
         style={{
-          overflow: 'hidden',
           height: addQr,
-          transition: 'height ease-in 0.3s',
           backgroundColor: 'red',
         }}
       >
@@ -77,7 +71,7 @@ export default function App() {
             selectComponent(e);
           }}
         />
-      </div>
+      </section>
     </>
   );
 }
