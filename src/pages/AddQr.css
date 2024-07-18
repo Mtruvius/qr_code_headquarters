@@ -24,7 +24,7 @@
   }
 
   & .qrPreview{
-    /* float: right; */
+    margin-bottom: 40px;
   }
 
   & .selectStyleField{

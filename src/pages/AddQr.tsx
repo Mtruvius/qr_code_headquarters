@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { IProps, QRCode } from 'react-qrcode-logo';
-import { ColorPicker, IColor, useColor } from 'react-color-palette';
+import { IProps } from 'react-qrcode-logo';
+// import { ColorPicker, IColor, useColor } from 'react-color-palette';
 import { SaveProps } from '../assets/helper';
 import Tooltip from '../components/Tooltip';
+import QrPreview from '../components/QrPreview';
 import Header from '../components/Header';
 import logo from '../assets/logo.png';
 import './AddQr.css';
@@ -41,105 +42,115 @@ function URLInput({
   );
 }
 
-function QrDotsStyle({
-  onStyleSelect,
-}: {
-  onStyleSelect: (style: string) => void;
-}) {
-  function handleClick(e: React.SyntheticEvent<EventTarget>) {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    onStyleSelect(String(e.target.dataset.style));
-  }
+// function QrDotsStyle({
+//   onStyleSelect,
+// }: {
+//   onStyleSelect: (style: string) => void;
+// }) {
+//   function handleClick(e: React.SyntheticEvent<EventTarget>) {
+//     if (!(e.target instanceof HTMLButtonElement)) return;
+//     onStyleSelect(String(e.target.dataset.style));
+//   }
 
-  return (
-    <div className="selectStyleField">
-      <span>Style:</span>
-      <button
-        type="button"
-        data-style="squares"
-        className="active"
-        onClick={handleClick}
-      >
-        squares
-      </button>
-      <button type="button" data-style="dots" onClick={handleClick}>
-        dots
-      </button>
-      <button type="button" data-style="fluid" onClick={handleClick}>
-        fluid
-      </button>
-    </div>
-  );
-}
+//   return (
+//     <div className="selectStyleField">
+//       <span>Style:</span>
+//       <button
+//         type="button"
+//         data-style="squares"
+//         className="active"
+//         onClick={handleClick}
+//       >
+//         squares
+//       </button>
+//       <button type="button" data-style="dots" onClick={handleClick}>
+//         dots
+//       </button>
+//       <button type="button" data-style="fluid" onClick={handleClick}>
+//         fluid
+//       </button>
+//     </div>
+//   );
+// }
+// function QrColorPicker({
+//   startColor,
+//   label,
+//   onColorChange,
+// }: {
+//   startColor: string;
+//   label: string;
+//   onColorChange: (color: string) => void;
+// }) {
+//   const [color, setColor] = useColor(startColor);
+//   const [isVisible, setVisibility] = useState('hidden');
+
+//   function handleChange(hex: IColor) {
+//     setColor(hex);
+//     onColorChange(hex.hex);
+//   }
+//   return (
+//     <div className="backColorOption">
+//       <div
+//         className={`colorPicker ${isVisible}`}
+//         onMouseLeave={() => {
+//           setVisibility('hidden');
+//         }}
+//       >
+//         <ColorPicker
+//           height={100}
+//           hideAlpha
+//           hideInput={['rgb', 'hsv']}
+//           color={color}
+//           onChange={(hex) => handleChange(hex)}
+//         />
+//       </div>
+//       <div>
+//         <span>{label}: </span>
+//         <button
+//           type="button"
+//           style={{ backgroundColor: color.hex }}
+//           onMouseEnter={() => setVisibility('')}
+//         >
+//           <span style={{ color: '#0000' }}>#</span>
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
 
 function QrSizeSlider({
+  title,
+  value,
+  unit = 'px',
+  min,
+  max,
   onSliderChange,
 }: {
+  title: string;
+  value: number;
+  // eslint-disable-next-line react/require-default-props
+  unit?: string;
+  min: number;
+  max: number;
   onSliderChange: (size: number) => void;
 }) {
-  const [size, setSize] = useState(150);
   function handleChange(e: React.SyntheticEvent<EventTarget>) {
-    setSize(Number((e.target as HTMLInputElement).value));
-    onSliderChange(size);
+    onSliderChange(Number((e.target as HTMLInputElement).value));
   }
 
   return (
     <div className="qrCode_size">
-      <span>Size: </span>
+      <span>{title}: </span>
       <input
         type="range"
-        min="60"
-        max="300"
-        defaultValue={size}
+        min={String(min)}
+        max={String(max)}
+        value={value}
         onChange={handleChange}
       />
-      <span>{size} px</span>
-    </div>
-  );
-}
-
-function QrColorPicker({
-  startColor,
-  label,
-  onColorChange,
-}: {
-  startColor: string;
-  label: string;
-  onColorChange: (color: string) => void;
-}) {
-  const [color, setColor] = useColor(startColor);
-  const [isVisible, setVisibility] = useState('hidden');
-
-  function handleChange(hex: IColor) {
-    setColor(hex);
-    onColorChange(hex.hex);
-  }
-  return (
-    <div className="backColorOption">
-      <div
-        className={`colorPicker ${isVisible}`}
-        onMouseLeave={() => {
-          setVisibility('hidden');
-        }}
-      >
-        <ColorPicker
-          height={100}
-          hideAlpha
-          hideInput={['rgb', 'hsv']}
-          color={color}
-          onChange={(hex) => handleChange(hex)}
-        />
-      </div>
-      <div>
-        <span>{label}: </span>
-        <button
-          type="button"
-          style={{ backgroundColor: color.hex }}
-          onMouseEnter={() => setVisibility('')}
-        >
-          <span style={{ color: '#0000' }}>#</span>
-        </button>
-      </div>
+      <span>
+        {value} {unit}
+      </span>
     </div>
   );
 }
@@ -176,44 +187,6 @@ function QrLogo({
       </label>
     </>
   );
-}
-
-function QrPreview({
-  ...props
-}: {
-  value: string;
-  size: number;
-  bgColor: string;
-  fgColor: string;
-  qrStyle: IProps['qrStyle'];
-  logoImage: string;
-}) {
-  const [data, setData] = useState('');
-  if (props.value !== '') {
-    if (data !== props.value) setData(props.value ? props.value : data);
-    return (
-      <QRCode
-        value={data}
-        // ecLevel={ecLevel}
-        size={props.size}
-        // quietZone={quietZone}
-        bgColor={props.bgColor}
-        fgColor={props.fgColor}
-        logoImage={props.logoImage}
-        // logoWidth={logoWidth}
-        // logoHeight={logoHeight}
-        // logoOpacity={logoOpacity}
-        // removeQrCodeBehindLogo={removeQrCodeBehindLogo}
-        // logoPadding={logoPadding}
-        // logoPaddingStyle={logoPaddingStyle}
-        qrStyle={props.qrStyle}
-        // eyeRadius={eyeRadius}
-        // eyeColor={eyeColor}
-        // id={id}
-        // style={style}
-      />
-    );
-  }
 }
 
 function SaveQr(props: SaveProps) {
@@ -285,7 +258,13 @@ export default function AddQr({
   const defaultFgColor = '#000';
   const defaultSize = 150;
   const defaultQrStyle = 'squares' as IProps['qrStyle'];
-  const defaultlogoImage = '';
+  const defaultLogoImage = '';
+  const defaultLogoWidth = 30;
+  const defaultLogoHeight = 30;
+  const defaultLogoOpacity = 100;
+  const defaultRemoveQrCodeBehindLogo = false;
+  const defaultLogoPadding = 0;
+  const defaultLogoPaddingStyle = 'square' as IProps['logoPaddingStyle'];
 
   const [inputVal, setInputVal] = useState(defaultQrValue);
   const [uploadedImg, setUploadedImg] = useState(logo);
@@ -294,8 +273,17 @@ export default function AddQr({
   const [fgColor, setFgColor] = useState(defaultFgColor);
   const [size, setSize] = useState(defaultSize);
   const [qrStyle, setqrStyle] = useState(defaultQrStyle);
-  const [logoImage, setLogoImage] = useState(defaultlogoImage);
-  // const [reset, setReset] = useState(false);
+  const [logoImage, setLogoImage] = useState(defaultLogoImage);
+  const [logoWidth, setLogoWidth] = useState(defaultLogoWidth);
+  const [logoHeight, setLogoHeight] = useState(defaultLogoHeight);
+  const [removeQrCodeBehindLogo, setRemoveQrCodeBehindLogo] = useState(
+    defaultRemoveQrCodeBehindLogo
+  );
+  const [logoOpacity, setLogoOpacity] = useState(defaultLogoOpacity);
+  const [logoPadding, setLogoPadding] = useState(defaultLogoPadding);
+  const [logoPaddingStyle, setLogoPaddingStyle] = useState(
+    defaultLogoPaddingStyle
+  );
 
   return (
     <>
@@ -309,13 +297,22 @@ export default function AddQr({
           setSize(defaultSize);
           setqrStyle(defaultQrStyle);
           setInputVal(defaultQrValue);
-          setLogoImage(defaultlogoImage);
+          setLogoImage(defaultLogoImage);
           setUploadedImg(logo);
+          setLogoWidth(defaultLogoWidth);
+          setLogoHeight(defaultLogoHeight);
+          setRemoveQrCodeBehindLogo(defaultRemoveQrCodeBehindLogo);
+          setLogoOpacity(defaultLogoOpacity);
+          setLogoPadding(defaultLogoPadding);
+          setLogoPaddingStyle(defaultLogoPaddingStyle);
         }}
       />
 
       <div id="addQr">
-        <div className="qrPreview" style={{ width: `${size}px` }}>
+        <div
+          className="qrPreview"
+          style={{ width: `${size}px`, height: `${size}px` }}
+        >
           <span>Preview: </span>
           <QrPreview
             value={qrValue}
@@ -324,6 +321,12 @@ export default function AddQr({
             bgColor={bgColor}
             fgColor={fgColor}
             logoImage={logoImage}
+            logoWidth={logoWidth}
+            logoHeight={logoHeight}
+            removeQrCodeBehindLogo={removeQrCodeBehindLogo}
+            logoOpacity={logoOpacity}
+            logoPadding={logoPadding}
+            logoPaddingStyle={logoPaddingStyle}
           />
         </div>
         <br />
@@ -337,13 +340,19 @@ export default function AddQr({
           }}
         />
         <br />
-        <QrDotsStyle
+        {/* <QrDotsStyle
           onStyleSelect={(style) => {
             setqrStyle(style as IProps['qrStyle']);
           }}
         />
         <br />
-        <QrSizeSlider onSliderChange={(s: number) => setSize(s)} />
+        <QrSizeSlider
+          title="Size"
+          value={size}
+          min={60}
+          max={300}
+          onSliderChange={(s: number) => setSize(s)}
+        />
         <br />
         <div className="qrCode_color">
           <span>Color:</span>
@@ -360,15 +369,58 @@ export default function AddQr({
           />
           <br />
         </div>
-        <br />
+        <br /> */}
         <div className="qr_img_section">
           <QrLogo
             uploadedImg={uploadedImg}
             onImageSelect={(img) => {
               setLogoImage(img);
+              setUploadedImg(img);
             }}
           />
         </div>
+        <QrSizeSlider
+          title="Width"
+          value={logoWidth}
+          min={20}
+          max={120}
+          onSliderChange={(width: number) => setLogoWidth(width)}
+        />
+        <br />
+        <QrSizeSlider
+          title="Height"
+          value={logoHeight}
+          min={20}
+          max={120}
+          onSliderChange={(height: number) => setLogoHeight(height)}
+        />
+        <br />
+        <QrSizeSlider
+          title="Opacity"
+          value={logoOpacity}
+          unit="%"
+          min={0}
+          max={100}
+          onSliderChange={(opacity: number) => setLogoOpacity(opacity)}
+        />
+        <br />
+        <div>
+          <span>Remove QrCode Behind Logo:</span>
+          <input
+            type="checkbox"
+            onChange={(e) => {
+              setRemoveQrCodeBehindLogo(e.target.checked);
+            }}
+          />
+        </div>
+        <br />
+        <QrSizeSlider
+          title="Logo Padding"
+          value={logoPadding}
+          min={0}
+          max={20}
+          onSliderChange={(padding: number) => setLogoPadding(padding)}
+        />
         <br />
         <FooterBtns
           clicked={(type) => {
