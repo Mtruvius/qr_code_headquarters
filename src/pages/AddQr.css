@@ -59,6 +59,13 @@
       }
     }
   }
+
+  & .qr_img_section {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
   & .footBtns button {
     margin: 0 5px;
   }

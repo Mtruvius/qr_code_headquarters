@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
 import { IProps, QRCode } from 'react-qrcode-logo';
 import { ColorPicker, IColor, useColor } from 'react-color-palette';
-import 'react-color-palette/css';
-import Tooltip from '../components/Tooltip';
 import { SaveProps } from '../assets/helper';
-import './AddQr.css';
+import Tooltip from '../components/Tooltip';
 import Header from '../components/Header';
+import logo from '../assets/logo.png';
+import './AddQr.css';
+import 'react-color-palette/css';
 
-function URLInput({ onURLSubmit }: { onURLSubmit: (url: string) => void }) {
+function URLInput({
+  value,
+  onChanging,
+  onURLSubmit,
+}: {
+  value: string;
+  onChanging: (value: string) => void;
+  onURLSubmit: (url: string) => void;
+}) {
   const [url, setURL] = useState('');
   return (
     <div className="dataField">
       <form onSubmit={(e) => e.preventDefault()}>
         <span>URL:</span>
-        <input type="text" onChange={(e) => setURL(e.target.value)} />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => {
+            const val = e.target.value;
+            onChanging(val);
+            setURL(val);
+          }}
+        />
         <div>
           <button type="submit" onClick={() => onURLSubmit(url)}>
             submit
@@ -127,6 +144,40 @@ function QrColorPicker({
   );
 }
 
+function QrLogo({
+  uploadedImg,
+  onImageSelect,
+}: {
+  uploadedImg: string;
+  onImageSelect(img: string): void;
+}) {
+  return (
+    <>
+      <div>Upload Logo:</div>
+      <label
+        htmlFor="img_upload"
+        className="img_upload"
+        style={{ backgroundImage: `URL(${uploadedImg})` }}
+      >
+        Custom Upload
+        <input
+          id="img_upload"
+          type="file"
+          onChange={(evt) => {
+            const { files } = evt.target;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const img = e.target?.result as string;
+              onImageSelect(img);
+            };
+            reader.readAsDataURL(files![0]);
+          }}
+        />
+      </label>
+    </>
+  );
+}
+
 function QrPreview({
   ...props
 }: {
@@ -135,6 +186,7 @@ function QrPreview({
   bgColor: string;
   fgColor: string;
   qrStyle: IProps['qrStyle'];
+  logoImage: string;
 }) {
   const [data, setData] = useState('');
   if (props.value !== '') {
@@ -147,7 +199,7 @@ function QrPreview({
         // quietZone={quietZone}
         bgColor={props.bgColor}
         fgColor={props.fgColor}
-        // logoImage={logoImage}
+        logoImage={props.logoImage}
         // logoWidth={logoWidth}
         // logoHeight={logoHeight}
         // logoOpacity={logoOpacity}
@@ -185,6 +237,43 @@ function SaveQr(props: SaveProps) {
   localStorage.setItem(name, JSON.stringify(data));
 }
 
+function FooterBtns({ clicked }: { clicked(type: string): void }) {
+  return (
+    <div className="footBtns">
+      <button
+        type="button"
+        className="material-symbols-outlined"
+        onClick={() => {
+          clicked('add');
+        }}
+        onMouseEnter={(e) => {
+          Tooltip(e.target as HTMLButtonElement, 'Add to Library');
+        }}
+        onMouseLeave={(e) => {
+          (e.target as HTMLButtonElement).children[0].remove();
+        }}
+      >
+        library_add
+      </button>
+      <button
+        type="button"
+        className="material-symbols-outlined"
+        onClick={() => {
+          clicked('download');
+        }}
+        onMouseEnter={(e) => {
+          Tooltip(e.target as HTMLButtonElement, 'Download');
+        }}
+        onMouseLeave={(e) => {
+          (e.target as HTMLButtonElement).children[0].remove();
+        }}
+      >
+        download
+      </button>
+    </div>
+  );
+}
+
 export default function AddQr({
   onBackClicked,
 }: {
@@ -196,12 +285,18 @@ export default function AddQr({
   const defaultFgColor = '#000';
   const defaultSize = 150;
   const defaultQrStyle = 'squares' as IProps['qrStyle'];
+  const defaultlogoImage = '';
 
+  const [inputVal, setInputVal] = useState(defaultQrValue);
+  const [uploadedImg, setUploadedImg] = useState(logo);
   const [qrValue, setQrValue] = useState(defaultQrValue);
   const [bgColor, setBgColor] = useState(defaultBgColor);
   const [fgColor, setFgColor] = useState(defaultFgColor);
   const [size, setSize] = useState(defaultSize);
   const [qrStyle, setqrStyle] = useState(defaultQrStyle);
+  const [logoImage, setLogoImage] = useState(defaultlogoImage);
+  // const [reset, setReset] = useState(false);
+
   return (
     <>
       <Header
@@ -213,6 +308,9 @@ export default function AddQr({
           setFgColor(defaultFgColor);
           setSize(defaultSize);
           setqrStyle(defaultQrStyle);
+          setInputVal(defaultQrValue);
+          setLogoImage(defaultlogoImage);
+          setUploadedImg(logo);
         }}
       />
 
@@ -225,10 +323,15 @@ export default function AddQr({
             size={size}
             bgColor={bgColor}
             fgColor={fgColor}
+            logoImage={logoImage}
           />
         </div>
         <br />
         <URLInput
+          value={inputVal}
+          onChanging={(val) => {
+            setInputVal(val);
+          }}
           onURLSubmit={(url) => {
             setQrValue(url);
           }}
@@ -245,58 +348,43 @@ export default function AddQr({
         <div className="qrCode_color">
           <span>Color:</span>
           <QrColorPicker
-            startColor="#fff"
+            startColor={bgColor}
             label="Back"
             onColorChange={(color) => setBgColor(color)}
           />
           <br />
           <QrColorPicker
-            startColor="#000"
+            startColor={fgColor}
             label="Front"
             onColorChange={(color) => setFgColor(color)}
           />
           <br />
         </div>
         <br />
-        <div className="footBtns">
-          <button
-            type="button"
-            className="material-symbols-outlined"
-            onClick={() => {
+        <div className="qr_img_section">
+          <QrLogo
+            uploadedImg={uploadedImg}
+            onImageSelect={(img) => {
+              setLogoImage(img);
+            }}
+          />
+        </div>
+        <br />
+        <FooterBtns
+          clicked={(type) => {
+            if (type === 'add') {
               const saveData: SaveProps = {
                 qrValue,
                 qrStyle,
                 size,
                 bgColor,
                 fgColor,
+                logoImage,
               };
               SaveQr(saveData);
-            }}
-            onMouseEnter={(e) => {
-              Tooltip(e.target as HTMLButtonElement, 'Add to Library');
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLButtonElement).children[0].remove();
-            }}
-          >
-            library_add
-          </button>
-          <button
-            type="button"
-            className="material-symbols-outlined"
-            onClick={() => {
-              // onClicked(e.target as HTMLButtonElement);
-            }}
-            onMouseEnter={(e) => {
-              Tooltip(e.target as HTMLButtonElement, 'Download');
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLButtonElement).children[0].remove();
-            }}
-          >
-            download
-          </button>
-        </div>
+            }
+          }}
+        />
         <br />
         <br />
       </div>

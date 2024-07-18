@@ -4,4 +4,5 @@ export interface SaveProps {
   fgColor: string;
   size: number;
   qrStyle: string | undefined;
+  logoImage: string;
 }

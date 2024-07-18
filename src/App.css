@@ -69,3 +69,20 @@ section{
   font-size:small;
   background-color: var(--Primary-color);  
 }
+
+input[type="file"] {
+  display: none;
+}
+
+.img_upload {
+  margin-left: 5px;
+  color: transparent;
+  border: 1px solid #ccc;
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}

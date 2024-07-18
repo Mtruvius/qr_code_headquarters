@@ -12,7 +12,7 @@ export default function Library({
   const library = JSON.parse(data || '[]');
   const savedQRs = library.map((lib: SaveProps) => {
     return (
-      <div>
+      <div key={lib.qrValue}>
         <QRCode
           value={lib.qrValue}
           // ecLevel={ecLevel}
@@ -20,7 +20,7 @@ export default function Library({
           // quietZone={quietZone}
           bgColor={lib.bgColor}
           fgColor={lib.fgColor}
-          // logoImage={logoImage}
+          logoImage={lib.logoImage}
           // logoWidth={logoWidth}
           // logoHeight={logoHeight}
           // logoOpacity={logoOpacity}
