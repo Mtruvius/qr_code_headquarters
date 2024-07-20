@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { IProps } from 'react-qrcode-logo';
 import { SaveProps } from '../assets/helper';
 import QrPreview from '../components/QrPreview';
@@ -111,6 +111,24 @@ function SaveQr(props: SaveProps) {
   localStorage.setItem(name, JSON.stringify(data));
 }
 
+const defaults = {
+  QrValue: '',
+  BgColor: '#fff',
+  FgColor: '#000',
+  Size: 150,
+  QrStyle: 'squares' as IProps['qrStyle'],
+  LogoImage: '',
+  LogoWidth: 30,
+  LogoHeight: 30,
+  LogoOpacity: 100,
+  RemoveQrCodeBehindLogo: false,
+  LogoPadding: 0,
+  LogoPaddingStyle: 'square' as IProps['logoPaddingStyle'],
+  EyeRadius: [0, 0, 0],
+  EyeColor: ['#000', '#000', '#000'],
+};
+const StyleContext = createContext(defaults);
+
 export default function AddQr({
   onBackClicked,
 }: {
@@ -131,6 +149,8 @@ export default function AddQr({
   const defaultLogoPaddingStyle = 'square' as IProps['logoPaddingStyle'];
   const defaultEyeRadius = [0, 0, 0];
   const defaultEyeColor = ['#000', '#000', '#000'];
+
+  const [styleVal, setStyleVal] = useState(defaults);
 
   const [inputVal, setInputVal] = useState(defaultQrValue);
   const [uploadedImg, setUploadedImg] = useState(logo);
@@ -160,7 +180,7 @@ export default function AddQr({
   const [bottomEyeColor, setBottomEyeColor] = useState(eyeColor[2]);
 
   return (
-    <>
+    <StyleContext.Provider value={styleVal}>
       <Header
         isBackBtn
         onBtnClicked={(e) => {
@@ -395,6 +415,6 @@ export default function AddQr({
         <br />
         <br />
       </div>
-    </>
+    </StyleContext.Provider>
   );
 }
