@@ -1,0 +1,12 @@
+.qrPreview{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 320px;
+  min-height: 320px;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.327);
+  border-radius: 10px;
+  margin: auto;
+}

@@ -1,0 +1,14 @@
+.colorOptions{
+  position: relative;
+  margin-left: 5px;
+
+  & .colorPicker{
+    position: absolute;
+    bottom: 0;
+    height: 266px;
+    width: 200px;      
+    & .rcp-root{
+      box-shadow: 2px 3px 5px #0009;
+    }
+  }
+}

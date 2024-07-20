@@ -5,4 +5,7 @@ export interface SaveProps {
   size: number;
   qrStyle: string | undefined;
   logoImage: string;
+  logoOpacity: number;
+  logoPadding: number;
+  logoPaddingStyle: string | undefined;
 }

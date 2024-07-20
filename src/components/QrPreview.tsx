@@ -1,6 +1,7 @@
 /* eslint-disable react/require-default-props */
 import { useState } from 'react';
 import { IProps, QRCode } from 'react-qrcode-logo';
+import './QrPreview.css';
 
 export default function QrPreview({
   ...props
@@ -16,16 +17,18 @@ export default function QrPreview({
   removeQrCodeBehindLogo: boolean;
   logoOpacity: number;
   logoPadding: number;
-  logoPaddingStyle: 'square' | 'circle' | undefined;
+  logoPaddingStyle: IProps['logoPaddingStyle'];
+  eyeRadius: IProps['eyeRadius'];
+  eyeColor: IProps['eyeColor'];
 }) {
-  const [data, setData] = useState('');
+  const [data, setData] = useState('Qr Code Headquarters');
   if (props.value !== '') {
     if (data !== props.value) setData(props.value ? props.value : data);
     return (
       <QRCode
         value={data}
         // ecLevel={ecLevel}
-        size={props.size}
+        size={props.size - 20}
         // quietZone={quietZone}
         bgColor={props.bgColor}
         fgColor={props.fgColor}
@@ -37,8 +40,8 @@ export default function QrPreview({
         logoOpacity={props.logoOpacity / 100}
         logoPadding={props.logoPadding}
         logoPaddingStyle={props.logoPaddingStyle}
-        // eyeRadius={eyeRadius}
-        // eyeColor={eyeColor}
+        eyeRadius={props.eyeRadius}
+        eyeColor={props.eyeColor}
         // id={id}
         // style={style}
       />

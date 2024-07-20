@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { IProps } from 'react-qrcode-logo';
-// import { ColorPicker, IColor, useColor } from 'react-color-palette';
 import { SaveProps } from '../assets/helper';
-import Tooltip from '../components/Tooltip';
 import QrPreview from '../components/QrPreview';
 import Header from '../components/Header';
 import logo from '../assets/logo.png';
+import SizeSlider from '../components/SizeSlider';
+import QrColorPicker from '../components/QrColorPicker';
+import QrLogoUpload from '../components/QrLogoUpload';
+import FooterBtns from '../components/FooterBtns';
 import './AddQr.css';
 import 'react-color-palette/css';
 
@@ -42,150 +44,49 @@ function URLInput({
   );
 }
 
-// function QrDotsStyle({
-//   onStyleSelect,
-// }: {
-//   onStyleSelect: (style: string) => void;
-// }) {
-//   function handleClick(e: React.SyntheticEvent<EventTarget>) {
-//     if (!(e.target instanceof HTMLButtonElement)) return;
-//     onStyleSelect(String(e.target.dataset.style));
-//   }
-
-//   return (
-//     <div className="selectStyleField">
-//       <span>Style:</span>
-//       <button
-//         type="button"
-//         data-style="squares"
-//         className="active"
-//         onClick={handleClick}
-//       >
-//         squares
-//       </button>
-//       <button type="button" data-style="dots" onClick={handleClick}>
-//         dots
-//       </button>
-//       <button type="button" data-style="fluid" onClick={handleClick}>
-//         fluid
-//       </button>
-//     </div>
-//   );
-// }
-// function QrColorPicker({
-//   startColor,
-//   label,
-//   onColorChange,
-// }: {
-//   startColor: string;
-//   label: string;
-//   onColorChange: (color: string) => void;
-// }) {
-//   const [color, setColor] = useColor(startColor);
-//   const [isVisible, setVisibility] = useState('hidden');
-
-//   function handleChange(hex: IColor) {
-//     setColor(hex);
-//     onColorChange(hex.hex);
-//   }
-//   return (
-//     <div className="backColorOption">
-//       <div
-//         className={`colorPicker ${isVisible}`}
-//         onMouseLeave={() => {
-//           setVisibility('hidden');
-//         }}
-//       >
-//         <ColorPicker
-//           height={100}
-//           hideAlpha
-//           hideInput={['rgb', 'hsv']}
-//           color={color}
-//           onChange={(hex) => handleChange(hex)}
-//         />
-//       </div>
-//       <div>
-//         <span>{label}: </span>
-//         <button
-//           type="button"
-//           style={{ backgroundColor: color.hex }}
-//           onMouseEnter={() => setVisibility('')}
-//         >
-//           <span style={{ color: '#0000' }}>#</span>
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-function QrSizeSlider({
-  title,
-  value,
-  unit = 'px',
-  min,
-  max,
-  onSliderChange,
+function QrStyles({
+  label,
+  buttons,
+  onStyleSelect,
 }: {
-  title: string;
-  value: number;
-  // eslint-disable-next-line react/require-default-props
-  unit?: string;
-  min: number;
-  max: number;
-  onSliderChange: (size: number) => void;
+  label: string;
+  buttons: string[];
+  onStyleSelect: (style: string) => void;
 }) {
-  function handleChange(e: React.SyntheticEvent<EventTarget>) {
-    onSliderChange(Number((e.target as HTMLInputElement).value));
+  function handleClick(e: React.SyntheticEvent<EventTarget>) {
+    if (!(e.target instanceof HTMLButtonElement)) return;
+    onStyleSelect(String(e.target.dataset.style));
   }
-
-  return (
-    <div className="qrCode_size">
-      <span>{title}: </span>
-      <input
-        type="range"
-        min={String(min)}
-        max={String(max)}
-        value={value}
-        onChange={handleChange}
-      />
-      <span>
-        {value} {unit}
-      </span>
-    </div>
-  );
-}
-
-function QrLogo({
-  uploadedImg,
-  onImageSelect,
-}: {
-  uploadedImg: string;
-  onImageSelect(img: string): void;
-}) {
-  return (
-    <>
-      <div>Upload Logo:</div>
-      <label
-        htmlFor="img_upload"
-        className="img_upload"
-        style={{ backgroundImage: `URL(${uploadedImg})` }}
+  const data = buttons.map((text, i) => {
+    if (i === 0) {
+      return (
+        <button
+          key={text}
+          type="button"
+          data-style={label.toLowerCase()}
+          onClick={handleClick}
+          className="active"
+        >
+          {text}
+        </button>
+      );
+    }
+    return (
+      <button
+        key={text}
+        type="button"
+        data-style={text.toLowerCase()}
+        onClick={handleClick}
       >
-        Custom Upload
-        <input
-          id="img_upload"
-          type="file"
-          onChange={(evt) => {
-            const { files } = evt.target;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const img = e.target?.result as string;
-              onImageSelect(img);
-            };
-            reader.readAsDataURL(files![0]);
-          }}
-        />
-      </label>
-    </>
+        {text}
+      </button>
+    );
+  });
+  return (
+    <div className="styleFieldBtns">
+      <span>{label}:</span>
+      {data}
+    </div>
   );
 }
 
@@ -210,43 +111,6 @@ function SaveQr(props: SaveProps) {
   localStorage.setItem(name, JSON.stringify(data));
 }
 
-function FooterBtns({ clicked }: { clicked(type: string): void }) {
-  return (
-    <div className="footBtns">
-      <button
-        type="button"
-        className="material-symbols-outlined"
-        onClick={() => {
-          clicked('add');
-        }}
-        onMouseEnter={(e) => {
-          Tooltip(e.target as HTMLButtonElement, 'Add to Library');
-        }}
-        onMouseLeave={(e) => {
-          (e.target as HTMLButtonElement).children[0].remove();
-        }}
-      >
-        library_add
-      </button>
-      <button
-        type="button"
-        className="material-symbols-outlined"
-        onClick={() => {
-          clicked('download');
-        }}
-        onMouseEnter={(e) => {
-          Tooltip(e.target as HTMLButtonElement, 'Download');
-        }}
-        onMouseLeave={(e) => {
-          (e.target as HTMLButtonElement).children[0].remove();
-        }}
-      >
-        download
-      </button>
-    </div>
-  );
-}
-
 export default function AddQr({
   onBackClicked,
 }: {
@@ -265,6 +129,8 @@ export default function AddQr({
   const defaultRemoveQrCodeBehindLogo = false;
   const defaultLogoPadding = 0;
   const defaultLogoPaddingStyle = 'square' as IProps['logoPaddingStyle'];
+  const defaultEyeRadius = [0, 0, 0];
+  const defaultEyeColor = ['#000', '#000', '#000'];
 
   const [inputVal, setInputVal] = useState(defaultQrValue);
   const [uploadedImg, setUploadedImg] = useState(logo);
@@ -284,6 +150,14 @@ export default function AddQr({
   const [logoPaddingStyle, setLogoPaddingStyle] = useState(
     defaultLogoPaddingStyle
   );
+  const [eyeRadius, setEyeRadius] = useState(defaultEyeRadius);
+  const [topLeftEye, setTopLeftEye] = useState(eyeRadius[0]);
+  const [topRightEye, setTopRightEye] = useState(eyeRadius[1]);
+  const [bottomLeftEye, setBottomLeftEye] = useState(eyeRadius[2]);
+  const [eyeColor, setEyeColor] = useState(defaultEyeColor);
+  const [leftEyeColor, setleftEyeColor] = useState(eyeColor[0]);
+  const [rightEyeColor, setRightEyeColor] = useState(eyeColor[1]);
+  const [bottomEyeColor, setBottomEyeColor] = useState(eyeColor[2]);
 
   return (
     <>
@@ -305,15 +179,26 @@ export default function AddQr({
           setLogoOpacity(defaultLogoOpacity);
           setLogoPadding(defaultLogoPadding);
           setLogoPaddingStyle(defaultLogoPaddingStyle);
+          setEyeRadius(defaultEyeRadius);
+          setEyeColor(defaultEyeColor);
         }}
       />
 
       <div id="addQr">
-        <div
-          className="qrPreview"
-          style={{ width: `${size}px`, height: `${size}px` }}
-        >
-          <span>Preview: </span>
+        <div className="qrInput">
+          <URLInput
+            value={inputVal}
+            onChanging={(val) => {
+              setInputVal(val);
+            }}
+            onURLSubmit={(url) => {
+              setQrValue(url);
+            }}
+          />
+        </div>
+        {/* preview */}
+        <span>Preview: </span>
+        <div className="qrPreview">
           <QrPreview
             value={qrValue}
             qrStyle={qrStyle}
@@ -327,51 +212,100 @@ export default function AddQr({
             logoOpacity={logoOpacity}
             logoPadding={logoPadding}
             logoPaddingStyle={logoPaddingStyle}
+            eyeRadius={eyeRadius as IProps['eyeRadius']}
+            eyeColor={eyeColor as IProps['eyeColor']}
           />
         </div>
-        <br />
-        <URLInput
-          value={inputVal}
-          onChanging={(val) => {
-            setInputVal(val);
-          }}
-          onURLSubmit={(url) => {
-            setQrValue(url);
-          }}
-        />
-        <br />
-        {/* <QrDotsStyle
-          onStyleSelect={(style) => {
-            setqrStyle(style as IProps['qrStyle']);
-          }}
-        />
-        <br />
-        <QrSizeSlider
-          title="Size"
-          value={size}
-          min={60}
-          max={300}
-          onSliderChange={(s: number) => setSize(s)}
-        />
-        <br />
-        <div className="qrCode_color">
-          <span>Color:</span>
-          <QrColorPicker
-            startColor={bgColor}
-            label="Back"
-            onColorChange={(color) => setBgColor(color)}
-          />
-          <br />
-          <QrColorPicker
-            startColor={fgColor}
-            label="Front"
-            onColorChange={(color) => setFgColor(color)}
-          />
-          <br />
+
+        <div className="stylling">
+          <div className="qr_size">
+            <SizeSlider
+              title="Size"
+              value={size}
+              min={60}
+              max={300}
+              onSliderChange={(s: number) => setSize(s)}
+            />
+          </div>
+          <div className="qrCode_color">
+            <span>Color:</span>
+            <QrColorPicker
+              startColor={bgColor}
+              label="Back"
+              onColorChange={(color) => setBgColor(color)}
+            />
+            <br />
+            <QrColorPicker
+              startColor={fgColor}
+              label="Front"
+              onColorChange={(color) => setFgColor(color)}
+            />
+            <br />
+          </div>
+          <div className="qr_style">
+            <QrStyles
+              label="Style"
+              buttons={['Squares', 'Dots', 'Fluid']}
+              onStyleSelect={(style) => {
+                setqrStyle(style as IProps['qrStyle']);
+              }}
+            />
+          </div>
+          <div className="qr_eyes_radius">
+            {eyeRadius.map((_, i) => {
+              let name;
+              switch (i) {
+                case 0:
+                  name = 'Top Left Eye';
+                  break;
+                case 1:
+                  name = 'Top Right Eye';
+                  break;
+                default:
+                  name = 'Bottom Left Eye';
+                  break;
+              }
+              return (
+                <div
+                  className={`qr_eye_slide ${name.toLowerCase().replaceAll(' ', '-')}`}
+                  key={name}
+                >
+                  <SizeSlider
+                    title={name}
+                    value={eyeRadius[i] * 2}
+                    unit="%"
+                    min={0}
+                    max={100}
+                    onSliderChange={(radius: number) => {
+                      const value = radius / 2;
+                      if (i === 0) setTopLeftEye(value);
+                      if (i === 1) setTopRightEye(value);
+                      if (i === 2) setBottomLeftEye(value);
+                      setEyeRadius([topLeftEye, topRightEye, bottomLeftEye]);
+                    }}
+                  />
+                  <QrColorPicker
+                    startColor="#000"
+                    label="Color"
+                    onColorChange={(color) => {
+                      if (i === 0) setleftEyeColor(color);
+                      if (i === 1) setRightEyeColor(color);
+                      if (i === 2) setBottomEyeColor(color);
+                      setEyeColor([
+                        leftEyeColor,
+                        rightEyeColor,
+                        bottomEyeColor,
+                      ]);
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <br /> */}
+
         <div className="qr_img_section">
-          <QrLogo
+          <QrLogoUpload
             uploadedImg={uploadedImg}
             onImageSelect={(img) => {
               setLogoImage(img);
@@ -379,32 +313,35 @@ export default function AddQr({
             }}
           />
         </div>
-        <QrSizeSlider
-          title="Width"
-          value={logoWidth}
-          min={20}
-          max={120}
-          onSliderChange={(width: number) => setLogoWidth(width)}
-        />
-        <br />
-        <QrSizeSlider
-          title="Height"
-          value={logoHeight}
-          min={20}
-          max={120}
-          onSliderChange={(height: number) => setLogoHeight(height)}
-        />
-        <br />
-        <QrSizeSlider
-          title="Opacity"
-          value={logoOpacity}
-          unit="%"
-          min={0}
-          max={100}
-          onSliderChange={(opacity: number) => setLogoOpacity(opacity)}
-        />
-        <br />
-        <div>
+        <div className="qr_img_width">
+          <SizeSlider
+            title="Width"
+            value={logoWidth}
+            min={20}
+            max={120}
+            onSliderChange={(width: number) => setLogoWidth(width)}
+          />
+        </div>
+        <div className="qr_img_height">
+          <SizeSlider
+            title="Height"
+            value={logoHeight}
+            min={20}
+            max={120}
+            onSliderChange={(height: number) => setLogoHeight(height)}
+          />
+        </div>
+        <div className="qr_img_opacity">
+          <SizeSlider
+            title="Opacity"
+            value={logoOpacity}
+            unit="%"
+            min={0}
+            max={100}
+            onSliderChange={(opacity: number) => setLogoOpacity(opacity)}
+          />
+        </div>
+        <div className="logo_removeBg">
           <span>Remove QrCode Behind Logo:</span>
           <input
             type="checkbox"
@@ -413,30 +350,48 @@ export default function AddQr({
             }}
           />
         </div>
-        <br />
-        <QrSizeSlider
-          title="Logo Padding"
-          value={logoPadding}
-          min={0}
-          max={20}
-          onSliderChange={(padding: number) => setLogoPadding(padding)}
-        />
-        <br />
-        <FooterBtns
-          clicked={(type) => {
-            if (type === 'add') {
-              const saveData: SaveProps = {
-                qrValue,
-                qrStyle,
-                size,
-                bgColor,
-                fgColor,
-                logoImage,
-              };
-              SaveQr(saveData);
-            }
-          }}
-        />
+        <div className="qr_img_logo_pad">
+          <SizeSlider
+            title="Logo Padding"
+            value={logoPadding}
+            min={0}
+            max={20}
+            onSliderChange={(padding: number) => setLogoPadding(padding)}
+          />
+        </div>
+        <div className="qr_pad_style">
+          <QrStyles
+            label="Logo Padding Style"
+            buttons={['Square', 'Circle']}
+            onStyleSelect={(style) => {
+              setLogoPaddingStyle(style as IProps['logoPaddingStyle']);
+            }}
+          />
+        </div>
+        <div className="footBtns">
+          <FooterBtns
+            btns={[
+              { text: 'library_add', tooltip: 'Add To Library' },
+              { text: 'download', tooltip: 'Download' },
+            ]}
+            onClicked={(e) => {
+              if (e === 'add') {
+                const saveData: SaveProps = {
+                  qrValue,
+                  qrStyle,
+                  size,
+                  bgColor,
+                  fgColor,
+                  logoImage,
+                  logoOpacity,
+                  logoPadding,
+                  logoPaddingStyle,
+                };
+                SaveQr(saveData);
+              }
+            }}
+          />
+        </div>
         <br />
         <br />
       </div>
