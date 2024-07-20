@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { IProps, QRCode } from 'react-qrcode-logo';
-import { SaveProps } from '../assets/helper';
 import './Library.css';
 import Header from '../components/Header';
 
@@ -8,38 +8,54 @@ export default function Library({
 }: {
   onBackClicked: (target: HTMLButtonElement) => void;
 }) {
+  const [isEmpty, setIsEmpty] = useState(true);
   const data = localStorage.getItem('qr_library');
+  if (data) {
+    if (isEmpty === true) {
+      setIsEmpty(false);
+    }
+  }
   const library = JSON.parse(data || '[]');
-  const savedQRs = library.map((lib: SaveProps) => {
+  const savedQRs = library.map((lib: IProps) => {
     return (
-      <div key={lib.qrValue}>
+      <div key={lib.value}>
         <QRCode
-          value={lib.qrValue}
+          value={lib.value}
           // ecLevel={ecLevel}
           size={lib.size}
           // quietZone={quietZone}
           bgColor={lib.bgColor}
           fgColor={lib.fgColor}
           logoImage={lib.logoImage}
-          // logoWidth={logoWidth}
-          // logoHeight={logoHeight}
-          // logoOpacity={logoOpacity}
-          // removeQrCodeBehindLogo={removeQrCodeBehindLogo}
-          // logoPadding={logoPadding}
-          // logoPaddingStyle={logoPaddingStyle}
+          logoWidth={lib.logoWidth}
+          logoHeight={lib.logoHeight}
+          logoOpacity={lib.logoOpacity}
+          removeQrCodeBehindLogo={lib.removeQrCodeBehindLogo}
+          logoPadding={lib.logoPadding}
+          logoPaddingStyle={lib.logoPaddingStyle}
           qrStyle={lib.qrStyle as IProps['qrStyle']}
-          // eyeRadius={eyeRadius}
-          // eyeColor={eyeColor}
+          eyeRadius={lib.eyeRadius}
+          eyeColor={lib.eyeColor}
           // id={id}
           // style={style}
         />
-        <span>{lib.qrValue}</span>
+        <span>{lib.value}</span>
       </div>
     );
   });
   return (
     <>
       <Header isBackBtn onBtnClicked={onBackClicked} />
+      <button
+        type="button"
+        onClick={() => {
+          if (isEmpty) return;
+          localStorage.clear();
+          setIsEmpty(true);
+        }}
+      >
+        Clear All
+      </button>
       <div className="library">{savedQRs}</div>
     </>
   );
