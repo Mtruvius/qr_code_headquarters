@@ -9,7 +9,7 @@ export default function QrLogoUpload({
 }) {
   return (
     <div className="logo_upload">
-      <div>Upload Logo:</div>
+      <span className="label">Upload Logo:</span>
       <label
         htmlFor="img_upload"
         className="img_upload"

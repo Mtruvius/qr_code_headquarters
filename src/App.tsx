@@ -40,7 +40,7 @@ export default function App() {
       <section
         style={{
           height: lib,
-          backgroundColor: 'var(--Primary-color)',
+          backgroundColor: 'var(--LightBlue-color)',
         }}
       >
         <Library
@@ -63,7 +63,7 @@ export default function App() {
       <section
         style={{
           height: addQr,
-          backgroundColor: 'red',
+          backgroundColor: 'var(--DarkRed-color)',
         }}
       >
         <AddQr

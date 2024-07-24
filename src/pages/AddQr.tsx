@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useReducer, useState } from 'react';
 import { IProps } from 'react-qrcode-logo';
 import QrPreview from '../components/QrPreview';
@@ -7,30 +8,13 @@ import SizeSlider from '../components/SizeSlider';
 import QrStyleBtns from '../components/QrStylesBtns';
 import QrColorPicker from '../components/QrColorPicker';
 import QrLogoUpload from '../components/QrLogoUpload';
-import FooterBtns from '../components/FooterBtns';
+import DownloadQrBtn from '../components/DownloadQrBtn';
+import Overlay from '../components/Overlay';
+
 import './AddQr.css';
 import 'react-color-palette/css';
-
-const saveQr = (props: IProps) => {
-  if (props.value === '') return;
-  const name = 'qr_library';
-  const data: IProps[] = [];
-  if (localStorage.getItem(name)) {
-    JSON.parse(localStorage.getItem(name)!).forEach((qrCode: IProps) => {
-      data.push(qrCode);
-    });
-  }
-  const conatinsData = data.some((v) => v.value === props.value);
-  if (conatinsData === false) {
-    data.push({ ...props });
-  } else {
-    data.filter((d) => {
-      if (d.value !== props.value) return d;
-      return Object.assign(d, props);
-    });
-  }
-  localStorage.setItem(name, JSON.stringify(data));
-};
+import LibraryAddBtn from '../components/LibraryAddBtn';
+import SaveQr from '../helpers/SaveQr';
 
 function URLInput({
   value,
@@ -100,7 +84,10 @@ export default function AddQr({
   onBackClicked: (target: HTMLButtonElement) => void;
 }) {
   const [preview, updatePreview] = useReducer(previewReducer, previewDefaults);
-
+  const [overlayHidden, setOverlayHidden] = useState('hidden');
+  const [overlayContent, setOverlayContent] = useState(<div>Hello World</div>);
+  const [showStyle, setShowStyle] = useState('hidden');
+  const [showLogoStylling, setLogoStylling] = useState('hidden');
   const [inputVal, setInputVal] = useState(preview.value!);
   const [uploadedImg, setUploadedImg] = useState(logo);
 
@@ -130,27 +117,51 @@ export default function AddQr({
           />
         </div>
 
-        <span>Preview: </span>
-        <div className="qrPreview">
-          <QrPreview
-            value={preview.value!}
-            qrStyle={preview.qrStyle}
-            size={preview.size!}
-            bgColor={preview.bgColor!}
-            fgColor={preview.fgColor!}
-            logoImage={preview.logoImage!}
-            logoWidth={preview.logoWidth!}
-            logoHeight={preview.logoHeight!}
-            removeQrCodeBehindLogo={preview.removeQrCodeBehindLogo!}
-            logoOpacity={preview.logoOpacity!}
-            logoPadding={preview.logoPadding!}
-            logoPaddingStyle={preview.logoPaddingStyle!}
-            eyeRadius={preview.eyeRadius}
-            eyeColor={preview.eyeColor}
-          />
+        <div className="preview_section">
+          <div className="preview">
+            <span>Preview: </span>
+            <div className="qrPreview">
+              <QrPreview
+                value={preview.value!}
+                qrStyle={preview.qrStyle}
+                size={preview.size!}
+                bgColor={preview.bgColor!}
+                fgColor={preview.fgColor!}
+                logoImage={preview.logoImage!}
+                logoWidth={preview.logoWidth!}
+                logoHeight={preview.logoHeight!}
+                removeQrCodeBehindLogo={preview.removeQrCodeBehindLogo!}
+                logoOpacity={preview.logoOpacity!}
+                logoPadding={preview.logoPadding!}
+                logoPaddingStyle={preview.logoPaddingStyle!}
+                eyeRadius={preview.eyeRadius}
+                eyeColor={preview.eyeColor}
+              />
+            </div>
+          </div>
+          <div className="styleBtns">
+            <button
+              type="button"
+              onClick={() => {
+                setShowStyle(showStyle === 'hidden' ? '' : 'hidden');
+                setLogoStylling('hidden');
+              }}
+            >
+              Style
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLogoStylling(showLogoStylling === 'hidden' ? '' : 'hidden');
+                setShowStyle('hidden');
+              }}
+            >
+              Logo
+            </button>
+          </div>
         </div>
 
-        <div className="stylling">
+        <div className={`stylling ${showStyle}`}>
           <div className="qr_size">
             <SizeSlider
               title="Size"
@@ -164,21 +175,21 @@ export default function AddQr({
             />
           </div>
           <div className="qrCode_color">
-            <span>Color:</span>
-            <QrColorPicker
-              startColor={preview.bgColor!}
-              label="Back"
-              onColorChange={(color) => {
-                updatePreview({ bgColor: color });
-              }}
-            />
-            <br />
-            <QrColorPicker
-              startColor={preview.fgColor!}
-              label="Front"
-              onColorChange={(color) => updatePreview({ fgColor: color })}
-            />
-            <br />
+            <span className="label">Color:</span>
+            <div className="colors">
+              <QrColorPicker
+                startColor={preview.bgColor!}
+                label="Back"
+                onColorChange={(color) => {
+                  updatePreview({ bgColor: color });
+                }}
+              />
+              <QrColorPicker
+                startColor={preview.fgColor!}
+                label="Front"
+                onColorChange={(color) => updatePreview({ fgColor: color })}
+              />
+            </div>
           </div>
           <div className="qr_style">
             <QrStyleBtns
@@ -189,19 +200,20 @@ export default function AddQr({
               }}
             />
           </div>
-          <div className="qr_eyes_radius">
+          <div className="slider_group">
+            <span className="label">Eye Radius: </span>
             {(preview.eyeRadius as number[]).map((eye, i) => {
               const eyeArr = preview.eyeRadius as number[];
               let name;
               switch (i) {
                 case 0:
-                  name = 'Top Left Eye';
+                  name = 'Left Eye';
                   break;
                 case 1:
-                  name = 'Top Right Eye';
+                  name = 'Right Eye';
                   break;
                 default:
-                  name = 'Bottom Left Eye';
+                  name = 'Bottom Eye';
                   break;
               }
               return (
@@ -236,7 +248,7 @@ export default function AddQr({
                   />
                   <QrColorPicker
                     startColor="#000"
-                    label="Color"
+                    // label=""
                     onColorChange={(color) => {
                       const colors = preview.eyeColor?.valueOf() as string[];
                       if (i === 0) {
@@ -261,7 +273,7 @@ export default function AddQr({
             })}
           </div>
         </div>
-        <div className="logo_stylling">
+        <div className={`stylling ${showLogoStylling}`}>
           <div className="qr_img_section">
             <QrLogoUpload
               uploadedImg={uploadedImg}
@@ -272,27 +284,30 @@ export default function AddQr({
               }}
             />
           </div>
-          <div className="qr_img_width">
-            <SizeSlider
-              title="Width"
-              value={preview.logoWidth!}
-              min={20}
-              max={120}
-              onSliderChange={(width: number) =>
-                updatePreview({ logoWidth: width })
-              }
-            />
-          </div>
-          <div className="qr_img_height">
-            <SizeSlider
-              title="Height"
-              value={preview.logoHeight!}
-              min={20}
-              max={120}
-              onSliderChange={(height: number) =>
-                updatePreview({ logoHeight: height })
-              }
-            />
+          <div className="slider_group">
+            <span className="label">Logo Size: </span>
+            <div className="qr_img_width">
+              <SizeSlider
+                title="Width"
+                value={preview.logoWidth!}
+                min={20}
+                max={120}
+                onSliderChange={(width: number) =>
+                  updatePreview({ logoWidth: width })
+                }
+              />
+            </div>
+            <div className="qr_img_height">
+              <SizeSlider
+                title="Height"
+                value={preview.logoHeight!}
+                min={20}
+                max={120}
+                onSliderChange={(height: number) =>
+                  updatePreview({ logoHeight: height })
+                }
+              />
+            </div>
           </div>
           <div className="qr_img_opacity">
             <SizeSlider
@@ -307,7 +322,7 @@ export default function AddQr({
             />
           </div>
           <div className="logo_removeBg">
-            <span>Remove QrCode Behind Logo:</span>
+            <span className="label">Remove QrCode Behind Logo:</span>
             <input
               type="checkbox"
               onChange={(e) => {
@@ -340,22 +355,45 @@ export default function AddQr({
         </div>
 
         <div className="footBtns">
-          <FooterBtns
-            btns={[
-              { text: 'library_add', tooltip: 'Add To Library' },
-              { text: 'download', tooltip: 'Download' },
-            ]}
-            onClicked={(e) => {
-              if (e === 'library_add') {
-                const saveData: IProps = { ...preview };
-                saveQr(saveData);
+          <LibraryAddBtn
+            onClicked={() => {
+              const saveData: IProps = { ...preview };
+              if (saveData.value !== '') {
+                SaveQr(saveData);
+                setOverlayHidden('');
+                setOverlayContent(
+                  <div className="overlay_content">
+                    <div className="overlay_content_title">
+                      {saveData.value} QR Code Saved
+                    </div>
+                    {
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      <QrPreview {...saveData} />
+                    }
+                  </div>
+                );
               }
             }}
+          />
+          <DownloadQrBtn
+            canvas={document.querySelector('#react-qrcode-logo')!}
+            name={inputVal}
           />
         </div>
         <br />
         <br />
       </div>
+      <Overlay
+        content={overlayContent}
+        onClicked={() => {
+          const defaults = Object.entries(previewDefaults);
+          setInputVal('');
+          setUploadedImg('');
+          defaults.map((def) => updatePreview({ [def[0]]: def[1] }));
+          setOverlayHidden('hidden');
+        }}
+        className={overlayHidden}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import './Home.css';
+
 import Mascot from '../assets/mascot.png';
 import Header from '../components/Header';
 

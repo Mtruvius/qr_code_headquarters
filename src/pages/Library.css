@@ -1,14 +1,65 @@
 .library{
   padding: 20px;
-
-  & div{
-    max-width: 150px;
-    max-height: 150px;
-    margin: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  justify-content: center;
+  & button{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    max-width: 190px;
+    max-height: 190px;
     float: left;
+    background: none;   
+    border: 0;
+    box-shadow: 0;
+  }
+  & button:hover canvas{   
+    max-width: 200px;
+    max-height: 200px;
+    box-shadow: -3px 3px 5px #00000054;
+    transition: all ease-in 0.2s;
+  }
+  & button:focus {
+    border: 0;
+    outline: 0;
   }
   & canvas{
     max-width: 150px;
     max-height: 150px;
+  }
+
+  
+}
+.clearAll{
+  height:50px
+}
+
+
+/* button.lib_qr-code div {
+  text-align: center;
+  width: 100%;
+} */
+
+@media only screen and (max-width:1280 ) {
+  .library{
+    grid-template-columns: auto auto auto auto;
+  }
+}
+
+@media only screen and (max-width:780px ) {
+  .library{
+    grid-template-columns: auto auto auto;
+  }
+}
+
+
+@media only screen and (max-width:580px ) {
+  .library{
+    grid-template-columns: auto;
   }
 }

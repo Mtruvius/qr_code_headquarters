@@ -22,7 +22,16 @@ export default function SizeSlider({
 
   return (
     <div className="size_slide">
-      <span>{title}: </span>
+      <span
+        className={
+          (title === 'Size' && 'label') ||
+          (title === 'Opacity' && 'label') ||
+          (title === 'Logo Padding' && 'label') ||
+          'slider_label'
+        }
+      >
+        {title}:{' '}
+      </span>
       <input
         type="range"
         min={String(min)}

@@ -19,7 +19,7 @@ export default function MenuBtns({
         onMouseLeave={(e) => {
           (e.target as HTMLButtonElement).children[0].remove();
         }}
-        className="home material-symbols-outlined"
+        className="add_qrBtn home material-symbols-outlined"
       >
         qr_code_2_add
       </button>
@@ -34,7 +34,7 @@ export default function MenuBtns({
         onMouseLeave={(e) => {
           (e.target as HTMLButtonElement).children[0].remove();
         }}
-        className="home material-symbols-outlined"
+        className="library_qrBtn home material-symbols-outlined"
       >
         library_books
       </button>

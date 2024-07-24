@@ -38,7 +38,7 @@ export default function QrStyleBtns({
   });
   return (
     <div className="styleFieldBtns">
-      <span>{label}:</span>
+      <span className="label">{label}: </span>
       {data}
     </div>
   );

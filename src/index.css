@@ -3,8 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
 
 :root {
-  --Primary-color: #9e9b9b;
-  --Secondary-color: #312f3a;
+  --LightBlue-color: #31a6c1;
+  --DarkRed-color: #9a382c;
+  --LightGrey-color: #9e9b9b;
+  --DarkGrey-color: #312f3a;
   --MainFont: "Agdasima", sans-serif;
   
   font-family: var(--MainFont);
@@ -49,7 +51,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: rgba(0, 0, 0, 0.663);
   cursor: pointer;
   transition: border-color 0.25s;
 }

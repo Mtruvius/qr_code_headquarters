@@ -4,11 +4,12 @@ import './QrColorPicker.css';
 
 export default function QrColorPicker({
   startColor,
-  label,
+  label = '',
   onColorChange,
 }: {
   startColor: string;
-  label: string;
+  // eslint-disable-next-line react/require-default-props
+  label?: string;
   onColorChange: (color: string) => void;
 }) {
   const [color, setColor] = useColor(startColor);
@@ -35,7 +36,7 @@ export default function QrColorPicker({
         />
       </div>
       <div>
-        <span>{label}: </span>
+        <span>{label !== '' ? `${label} :` : null} </span>
         <button
           type="button"
           style={{ backgroundColor: color.hex }}

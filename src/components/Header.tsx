@@ -1,5 +1,6 @@
 import MenuBtns from './MenuBtns';
 import BackBtn from './BackBtn';
+import './Header.css';
 
 export default function Header({
   isBackBtn = false,
