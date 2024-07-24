@@ -85,7 +85,7 @@ export default function AddQr({
 }) {
   const [preview, updatePreview] = useReducer(previewReducer, previewDefaults);
   const [overlayHidden, setOverlayHidden] = useState('hidden');
-  const [overlayContent, setOverlayContent] = useState(<div>Hello World</div>);
+  const [overlayContent, setOverlayContent] = useState(<div />);
   const [showStyle, setShowStyle] = useState('hidden');
   const [showLogoStylling, setLogoStylling] = useState('hidden');
   const [inputVal, setInputVal] = useState(preview.value!);
@@ -121,22 +121,7 @@ export default function AddQr({
           <div className="preview">
             <span>Preview: </span>
             <div className="qrPreview">
-              <QrPreview
-                value={preview.value!}
-                qrStyle={preview.qrStyle}
-                size={preview.size!}
-                bgColor={preview.bgColor!}
-                fgColor={preview.fgColor!}
-                logoImage={preview.logoImage!}
-                logoWidth={preview.logoWidth!}
-                logoHeight={preview.logoHeight!}
-                removeQrCodeBehindLogo={preview.removeQrCodeBehindLogo!}
-                logoOpacity={preview.logoOpacity!}
-                logoPadding={preview.logoPadding!}
-                logoPaddingStyle={preview.logoPaddingStyle!}
-                eyeRadius={preview.eyeRadius}
-                eyeColor={preview.eyeColor}
-              />
+              <QrPreview {...preview} />
             </div>
           </div>
           <div className="styleBtns">
@@ -169,7 +154,6 @@ export default function AddQr({
               min={60}
               max={300}
               onSliderChange={(s: number) => {
-                // setSize(s);
                 updatePreview({ size: s });
               }}
             />
@@ -366,10 +350,7 @@ export default function AddQr({
                     <div className="overlay_content_title">
                       {saveData.value} QR Code Saved
                     </div>
-                    {
-                      // eslint-disable-next-line react/jsx-props-no-spreading
-                      <QrPreview {...saveData} />
-                    }
+                    <QrPreview {...saveData} />
                   </div>
                 );
               }
