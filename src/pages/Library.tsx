@@ -19,11 +19,6 @@ function DeleteBtn({
       type="button"
       onClick={() => {
         onClicked();
-        // if (label === 'Clear All') {
-        //   localStorage.clear();
-        // } else {
-        //   onClicked();
-        // }
       }}
       className={className}
     >
@@ -105,41 +100,6 @@ export default function Library({
     );
   });
 
-  // const savedQRs = library.map((lib: IProps) => {
-  //   return (
-  //     <button
-  //       type="button"
-  //       key={lib.value}
-  //       className="lib_qr-code"
-  //       onClick={(e) => {
-  //         console.log(e);
-  //         // setQRCode();
-  //       }}
-  //     >
-  //       <QRCode
-  //         value={lib.value}
-  //         // ecLevel={ecLevel}
-  //         size={lib.size}
-  //         // quietZone={quietZone}
-  //         bgColor={lib.bgColor}
-  //         fgColor={lib.fgColor}
-  //         logoImage={lib.logoImage}
-  //         logoWidth={lib.logoWidth}
-  //         logoHeight={lib.logoHeight}
-  //         logoOpacity={lib.logoOpacity}
-  //         removeQrCodeBehindLogo={lib.removeQrCodeBehindLogo}
-  //         logoPadding={lib.logoPadding}
-  //         logoPaddingStyle={lib.logoPaddingStyle}
-  //         qrStyle={lib.qrStyle as IProps['qrStyle']}
-  //         eyeRadius={lib.eyeRadius}
-  //         eyeColor={lib.eyeColor}
-  //         // id={id}
-  //         // style={style}
-  //       />
-  //       <div>{lib.value}</div>
-  //     </button>
-  //   );
-  // });
   return (
     <>
       <Header isBackBtn onBtnClicked={onBackClicked} />
@@ -151,7 +111,9 @@ export default function Library({
           localStorage.clear();
         }}
       />
+
       <div className="library">{isEmpty ? null : savedQRs}</div>
+
       <Overlay
         className={overlay}
         content={
